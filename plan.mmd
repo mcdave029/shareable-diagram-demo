@@ -1,15 +1,21 @@
-flowchart LR
-  A["Start / Inputs"]
-  B["Create Infisical project"]
-  C["Create Twilio subaccount"]
-  D["Create object storage bucket (R2 or S3)"]
-  E["Provision Google Workspace email"]
-  F["Workspace init - repo/env/secrets wiring"]
-  G["Create Discord bot"]
-  H["Docker build & deploy"]
-  I["Ingress - tunnel or HTTPS"]
-  J["Assign Tailscale identity"]
-  K["Verification & smoke tests"]
-  L["Share preview link"]
-
-  A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K --> L
+flowchart TB
+  A[VPC]
+  A --> B1[Public subnet]
+  A --> B2[Private subnet]
+  B1 --> ALB[ALB / Ingress]
+  ALB --> NLB[NLB (optional for TCP/GRPC)]
+  B2 --> EKS[EKS control plane (managed)]
+  EKS --> ASG[Node group (EC2 or Fargate)]
+  ASG --> NP1[Node Pool A]
+  ASG --> NP2[Node Pool B]
+  NP1 --> P1[Pods: web / api]
+  NP2 --> P2[Pods: jobs / workers]
+  EKS --> CSI[Storage: EBS/FSx/GP3 CSI]
+  EKS --> CNI[CNI: VPC CNI]
+  EKS --> IAM[IAM Roles for Service Accounts]
+  ALB --> SVC1[Service: web (LoadBalancer)]
+  NLB --> SVC2[Service: grpc/tcp (LoadBalancer)]
+  P1 --> DB[(RDS/Aurora)]
+  P2 --> MQ[(SQS/SNS/Kafka)]
+  classDef dim fill:#11172d,stroke:#1f2937,color:#e6edf5;
+  class A,B1,B2,ALB,NLB,EKS,ASG,NP1,NP2,P1,P2,CSI,CNI,IAM,SVC1,SVC2,DB,MQ dim;

@@ -3,16 +3,143 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Integration Plan Preview</title>
-  <meta property="og:title" content="Integration Plan Preview" />
-  <meta property="og:description" content="Flow: Infisical → Twilio → Object storage → Workspace/email → Discord bot → Build/deploy → Ingress → Tailscale → Verify → Share" />
+  <title>AWS EKS Overview</title>
+  <meta property="og:title" content="AWS EKS Overview" />
+  <meta property="og:description" content="VPC, subnets, ALB/NLB, EKS control plane, node groups, services, storage, IAM, and data plane attachments." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #0b1021;
+      --card: #11172d;
+      --muted: #9fb3c8;
+      --text: #e6edf5;
+      --accent: #7c3aed;
+      --accent-2: #22c55e;
+      --border: #1f2937;
+      --shadow: 0 24px 60px rgba(0,0,0,0.3);
+      --radius: 14px;
+      --gap: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(124,58,237,0.12), transparent 35%),
+                  radial-gradient(circle at 80% 0%, rgba(34,197,94,0.12), transparent 35%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .shell {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    header {
+      background: linear-gradient(135deg, rgba(124,58,237,0.14), rgba(34,197,94,0.12));
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 20px 18px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    h1 {
+      margin: 0 0 6px 0;
+      font-size: clamp(22px, 3vw, 28px);
+      letter-spacing: -0.01em;
+    }
+    .lede { margin: 0; color: var(--muted); font-size: 15px; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--gap);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(124,58,237,0.16);
+      color: #d9c7ff;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+    .pill span { font-size: 12px; opacity: 0.8; }
+    ol { margin: 0; padding-left: 18px; color: var(--muted); display: grid; gap: 6px; }
+    li { padding-left: 4px; }
+    .diagram-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #0f1429;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .diagram {
+      width: 100%;
+      min-width: 320px;
+      border: none;
+      background: transparent;
+    }
+    footer { color: var(--muted); font-size: 13px; text-align: center; padding: 8px 0 0; }
+    @media (max-width: 640px) {
+      body { padding: 18px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-<body style="font-family: system-ui, -apple-system, sans-serif; margin: 24px;">
-  <h1 style="margin-bottom: 12px;">Integration Plan Preview</h1>
-  <p style="margin-top: 0; margin-bottom: 16px; color: #444;">Infisical → Twilio → Object storage → Workspace/email → Discord bot → Build/deploy → Ingress → Tailscale → Verify → Share</p>
-  <div style="overflow-x: auto; border: 1px solid #ddd; padding: 12px; border-radius: 8px;">
-    <!-- SVG embed -->
-    <object data="plan.svg" type="image/svg+xml" style="width: 100%; min-width: 320px;"></object>
+<body>
+  <div class="shell">
+    <header>
+      <div class="pill">AWS EKS overview <span>VPC → subnets → ingress → control plane → nodes → services → data</span></div>
+      <h1>AWS EKS architecture snapshot</h1>
+      <p class="lede">VPC with public/private subnets, ALB/NLB ingress, managed control plane, node groups (EC2/Fargate), services, CSI storage, CNI, IRSA, and downstream data stores.</p>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <h3 style="margin-top:0; margin-bottom:8px;">Key components</h3>
+        <ol>
+          <li>VPC with public & private subnets</li>
+          <li>Ingress: ALB (HTTP) and optional NLB (TCP/GRPC)</li>
+          <li>EKS managed control plane</li>
+          <li>Node groups (EC2 or Fargate), multiple pools</li>
+          <li>Workloads: web/api pods; jobs/workers</li>
+          <li>Services: LoadBalancer for web; LB for grpc/tcp</li>
+          <li>Storage: EBS/FSx/GP3 via CSI</li>
+          <li>Networking: VPC CNI</li>
+          <li>IAM Roles for Service Accounts (IRSA)</li>
+          <li>Data plane attachments: RDS/Aurora, SQS/SNS/Kafka</li>
+        </ol>
+      </section>
+      <section class="card">
+        <h3 style="margin-top:0; margin-bottom:8px;">Notes</h3>
+        <ol>
+          <li>Static page: HTML + SVG, no external deps.</li>
+          <li>To update: edit <code>plan.mmd</code> → rebuild <code>plan.svg</code> via Kroki.</li>
+          <li>Keep private: don’t publish Pages; serve locally or via private link.</li>
+          <li>Mobile-friendly: cards stack; diagram scrolls horizontally.</li>
+        </ol>
+      </section>
+    </div>
+
+    <div class="diagram-wrap">
+      <object class="diagram" data="plan.svg" type="image/svg+xml"></object>
+    </div>
+
+    <footer>Private view • Static assets only.</footer>
   </div>
 </body>
 </html>
