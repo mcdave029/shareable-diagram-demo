@@ -1,0 +1,15 @@
+flowchart LR
+  A["Start / Inputs"]
+  B["Create Infisical project"]
+  C["Create Twilio subaccount"]
+  D["Create object storage bucket (R2 or S3)"]
+  E["Provision Google Workspace email"]
+  F["Workspace init - repo/env/secrets wiring"]
+  G["Create Discord bot"]
+  H["Docker build & deploy"]
+  I["Ingress - tunnel or HTTPS"]
+  J["Assign Tailscale identity"]
+  K["Verification & smoke tests"]
+  L["Share preview link"]
+
+  A --> B --> C --> D --> E --> F --> G --> H --> I --> J --> K --> L
