@@ -174,81 +174,92 @@ const html = `<!DOCTYPE html>
   body {
     margin: 0;
     font-family: var(--font);
-    background: var(--bg);
+    background: radial-gradient(circle at 10% 20%, #f4f7ff 0, transparent 26%),
+                radial-gradient(circle at 90% 10%, #eef5ff 0, transparent 22%),
+                var(--bg);
     color: var(--text);
-    padding: 32px;
+    padding: 40px;
   }
   .canvas {
-    max-width: 1200px;
+    max-width: 1240px;
     margin: 0 auto;
+    display: grid;
+    gap: 14px;
   }
-  h1 { margin: 0 0 8px 0; }
-  .desc { color: var(--muted); margin: 0 0 24px 0; }
+  h1 { margin: 0 0 6px 0; letter-spacing: -0.01em; }
+  .desc { color: var(--muted); margin: 0 0 12px 0; }
   .panel {
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 24px;
+    border-radius: calc(var(--radius) + 2px);
+    box-shadow: 0 14px 40px rgba(15,23,42,0.08);
+    padding: 26px 26px 22px;
   }
   .badge {
     display: inline-block;
-    padding: 4px 8px;
+    padding: 4px 10px;
     border-radius: 999px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: rgba(15,98,254,0.08);
+    color: var(--primary);
   }
   /* Flow */
-  .flow { display: grid; gap: var(--spacing); position: relative; }
+  .flow { display: grid; gap: calc(var(--spacing) * 1.4); position: relative; counter-reset: step; }
   .flow-row { display: grid; grid-template-columns: auto 1fr; gap: var(--spacing); align-items: start; }
-  .dot { width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px var(--border); margin-top: 6px; }
+  .dot { width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 0 0 2px var(--border); margin-top: 4px; position: relative; background: var(--primary); }
+  .dot::after { counter-increment: step; content: counter(step); position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font-size: 11px; font-weight: 700; }
   .flow-card {
-    background: var(--panel);
+    background: linear-gradient(135deg, rgba(15,98,254,0.02), rgba(15,98,254,0));
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px 16px;
+    padding: 16px 18px;
     box-shadow: var(--shadow);
   }
-  .flow-title { font-weight: 700; }
-  .flow-detail { color: var(--muted); margin: 4px 0 6px 0; }
-  .connector { width: 2px; background: var(--border); height: 20px; margin-left: 7px; justify-self: center; }
+  .flow-title { font-weight: 750; letter-spacing: -0.01em; }
+  .flow-detail { color: var(--muted); margin: 6px 0 8px 0; line-height: 1.45; }
+  .connector { width: 2px; background: linear-gradient(180deg, var(--border), rgba(15,98,254,0.25)); height: 26px; margin-left: 9px; justify-self: center; border-radius: 999px; }
   /* Timeline */
-  .timeline { display: flex; gap: 18px; align-items: flex-start; flex-wrap: wrap; }
-  .time-item { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
-  .time-dot { width: 16px; height: 16px; border: 3px solid var(--primary); border-radius: 50%; background: white; margin-top: 6px; }
-  .time-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; box-shadow: var(--shadow); min-width: 180px; }
-  .time-date { font-size: 12px; color: var(--muted); }
-  .time-title { font-weight: 700; }
-  .time-detail { color: var(--muted); margin: 4px 0 6px 0; }
-  .time-line { flex: 1; height: 2px; background: var(--border); align-self: center; min-width: 40px; }
+  .timeline { display: grid; gap: calc(var(--spacing) * 1.6); position: relative; }
+  .timeline::before { content: ""; position: absolute; left: 10px; top: 12px; bottom: 12px; width: 2px; background: linear-gradient(180deg, var(--border), rgba(15,98,254,0.2)); border-radius: 999px; }
+  .time-item { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; position: relative; }
+  .time-dot { width: 18px; height: 18px; border: 3px solid #fff; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 2px var(--border); margin-top: 4px; }
+  .time-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); min-width: 220px; }
+  .time-date { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: 0.02em; text-transform: uppercase; }
+  .time-title { font-weight: 750; margin-top: 2px; letter-spacing: -0.01em; }
+  .time-detail { color: var(--muted); margin: 6px 0 8px 0; line-height: 1.45; }
   /* Lanes */
-  .lanes { display: grid; gap: var(--spacing); }
-  .lane { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px 14px; }
-  .lane-title { font-weight: 700; margin-bottom: 8px; color: var(--secondary); }
+  .lanes { display: grid; gap: calc(var(--spacing) * 1.1); }
+  .lane { background: linear-gradient(135deg, rgba(15,98,254,0.04), rgba(15,98,254,0)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; }
+  .lane-title { font-weight: 750; margin-bottom: 10px; color: var(--secondary); letter-spacing: -0.01em; }
   .lane-steps { display: flex; gap: var(--spacing); flex-wrap: wrap; }
-  .lane-card { background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius); padding: 10px 12px; min-width: 140px; }
-  .lane-label { font-weight: 600; }
-  .lane-detail { color: var(--muted); margin: 4px 0; }
+  .lane-card { background: var(--panel); border: 1px dashed var(--border); border-radius: var(--radius); padding: 12px 14px; min-width: 160px; box-shadow: 0 8px 24px rgba(15,23,42,0.06); }
+  .lane-label { font-weight: 700; }
+  .lane-detail { color: var(--muted); margin: 6px 0; line-height: 1.4; }
   /* KPI */
-  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--spacing); }
-  .kpi-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; }
-  .kpi-label { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 12px; }
-  .kpi-value { font-size: 28px; font-weight: 800; margin: 6px 0; }
-  .kpi-delta { color: var(--accent); font-weight: 600; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--spacing); }
+  .kpi-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px 18px; display: grid; gap: 6px; }
+  .kpi-label { color: var(--muted); font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.04em; }
+  .kpi-value { font-size: 30px; font-weight: 800; letter-spacing: -0.01em; }
+  .kpi-delta { color: var(--accent); font-weight: 700; }
   .kpi-foot { color: var(--muted); font-size: 12px; }
   /* Comparison */
   .comparison { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-  .comp-head, .comp-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
-  .comp-cell { padding: 12px 14px; background: var(--panel); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
-  .comp-cell.label { background: #f0f2f6; font-weight: 700; }
+  .comp-head, .comp-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+  .comp-cell { padding: 14px 16px; background: var(--panel); border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); }
+  .comp-cell.label { background: #eef2ff; font-weight: 750; color: var(--secondary); letter-spacing: -0.01em; }
   .comp-row:last-child .comp-cell { border-bottom: none; }
   .comp-row .comp-cell:last-child, .comp-head .comp-cell:last-child { border-right: none; }
 </style>
 </head>
 <body>
   <div class="canvas">
-    <h1>${escape(spec.title || 'Diagram')}</h1>
-    ${spec.description ? `<p class="desc">${escape(spec.description)}</p>` : ''}
+    <div>
+      <div class="badge">Roadmap & Integrations</div>
+      <h1>${escape(spec.title || 'Diagram')}</h1>
+      ${spec.description ? `<p class="desc">${escape(spec.description)}</p>` : ''}
+    </div>
     <div class="panel">
       ${renderer(spec.data)}
     </div>
