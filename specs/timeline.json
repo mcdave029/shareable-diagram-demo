@@ -1,0 +1,14 @@
+{
+  "title": "Execution Timeline",
+  "description": "Stripe IDV + payments rollout",
+  "type": "timeline",
+  "data": {
+    "items": [
+      { "label": "Tech Design", "date": "Mar 11", "detail": "Stripe + IDV flows" },
+      { "label": "Build MVP", "date": "Mar 14", "detail": "Core happy path" },
+      { "label": "Integration Tests", "date": "Mar 18", "detail": "Sandbox + mocks" },
+      { "label": "Pilot", "date": "Mar 22", "detail": "Cohort of 20" },
+      { "label": "GA", "date": "Mar 28", "detail": "Feature flag off" }
+    ]
+  }
+}

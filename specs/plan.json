@@ -1,0 +1,20 @@
+{
+  "title": "MVP Plan",
+  "description": "Phase gating for payments + IDV rollout",
+  "type": "flow",
+  "data": {
+    "nodes": [
+      { "id": "discover", "label": "Discovery", "detail": "User journeys + risk" },
+      { "id": "idv", "label": "ID Verification", "detail": "Stripe Identity" },
+      { "id": "payments", "label": "Payments", "detail": "Stripe Elements" },
+      { "id": "pilot", "label": "Pilot", "detail": "Limited cohort" },
+      { "id": "ga", "label": "GA", "detail": "Full release" }
+    ],
+    "edges": [
+      { "from": "discover", "to": "idv" },
+      { "from": "idv", "to": "payments" },
+      { "from": "payments", "to": "pilot" },
+      { "from": "pilot", "to": "ga" }
+    ]
+  }
+}
