@@ -29,8 +29,10 @@ jobs:
           node-version: '20'
       - name: Install Playwright
         run: |
+          sudo apt-get update
+          sudo apt-get install -y libasound2t64
           npm install playwright@1.42.0
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
       - name: Generate HTML
         run: |
           node scripts/generate_html.js specs/plan.json plan.html
