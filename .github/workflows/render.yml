@@ -1,0 +1,50 @@
+name: Render diagrams
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'specs/**'
+      - 'scripts/**'
+      - 'index.html'
+      - 'plan.html'
+      - 'timeline.html'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: gh-pages
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install Playwright
+        run: |
+          npm install playwright@1.42.0
+          npx playwright install --with-deps chromium
+      - name: Generate HTML
+        run: |
+          node scripts/generate_html.js specs/plan.json plan.html
+          node scripts/generate_html.js specs/timeline.json timeline.html
+      - name: Render PNGs
+        run: |
+          node scripts/snapshot_png.js plan.html plan.png
+          node scripts/snapshot_png.js timeline.html timeline.png
+      - name: Publish to gh-pages
+        run: |
+          cp plan.html timeline.html plan.png timeline.png index.html gh-pages/
+          cd gh-pages
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add plan.html timeline.html plan.png timeline.png index.html
+          git commit -m "Update diagrams" || echo "No changes"
+          git push origin gh-pages
